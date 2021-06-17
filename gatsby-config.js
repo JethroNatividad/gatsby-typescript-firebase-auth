@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
+    title: `ARA ARA`,
     description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
     author: `@gatsbyjs`,
   },
@@ -32,5 +32,27 @@ module.exports = {
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
+    {
+      resolve: "gatsby-plugin-firebase",
+      options: {
+        credentials: {
+          apiKey: "AIzaSyDSh8ris7hTZuO7StjXTX12SqgCjeHYwq0",
+          authDomain: "test-67400.firebaseapp.com",
+          databaseURL: "https://test-67400-default-rtdb.firebaseio.com",
+          projectId: "test-67400",
+          storageBucket: "test-67400.appspot.com",
+          messagingSenderId: "416299946313",
+          appId: "1:416299946313:web:5c13ad958c1a39f33aca98",
+        },
+      },
+    },
+    {
+      resolve: `gatsby-plugin-material-ui`,
+      options: {
+        stylesProvider: {
+          injectFirst: true,
+        },
+      },
+    },
   ],
 }
