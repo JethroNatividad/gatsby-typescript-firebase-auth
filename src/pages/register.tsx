@@ -10,8 +10,8 @@ import {
 } from "@material-ui/core"
 import { LockOutlined } from "@material-ui/icons"
 import { Link as GatsbyLink } from "gatsby"
-
 import { useFormik } from "formik"
+import * as yup from "yup"
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -37,11 +37,30 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+const validationSchema = yup.object({
+  firstName: yup
+    .string()
+    .min(2, "First name should be of minimum 2 characters length")
+    .required("First name is required"),
+  lastName: yup
+    .string()
+    .min(2, "Last name should be of minimum 2 characters length"),
+  email: yup
+    .string()
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(8, "Password should be of minimum 8 characters length")
+    .required("Password is required"),
+})
+
 const register = () => {
   const initialValues = { firstName: "", lastName: "", email: "", password: "" }
   const classes = useStyles()
   const formik = useFormik({
     initialValues,
+    validationSchema,
     onSubmit: (values, actions) => {
       console.log({ values, actions })
       setTimeout(() => {
@@ -61,7 +80,7 @@ const register = () => {
           Sign up
         </Typography>
 
-        <form className={classes.form} onSubmit={handleSubmit}>
+        <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
