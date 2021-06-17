@@ -7,11 +7,13 @@ import {
   Grid,
   TextField,
   Button,
+  CircularProgress,
 } from "@material-ui/core"
 import { LockOutlined } from "@material-ui/icons"
-import { Link as GatsbyLink } from "gatsby"
+import { Link as GatsbyLink, navigate } from "gatsby"
 import { useFormik } from "formik"
 import * as yup from "yup"
+import { userSignUp } from "../services/authService"
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -61,12 +63,14 @@ const register = () => {
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: (values, actions) => {
+    onSubmit: async (values, actions) => {
       console.log({ values, actions })
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2))
-        actions.setSubmitting(false)
-      }, 500)
+      const error = await userSignUp(values)
+      if (error) {
+        actions.setErrors({ [error.field]: error.error })
+      }
+      // navi
+      actions.setSubmitting(false)
     },
   })
   const { values, touched, errors, handleSubmit, handleChange } = formik
@@ -79,7 +83,6 @@ const register = () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -151,7 +154,9 @@ const register = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={formik.isSubmitting}
           >
+            {formik.isSubmitting && <CircularProgress size={14} />}
             Sign Up
           </Button>
           <Grid container justify="flex-end">
