@@ -68,8 +68,9 @@ const register = () => {
       const error = await userSignUp(values)
       if (error) {
         actions.setErrors({ [error.field]: error.error })
+      } else {
+        navigate("/")
       }
-      // navi
       actions.setSubmitting(false)
     },
   })

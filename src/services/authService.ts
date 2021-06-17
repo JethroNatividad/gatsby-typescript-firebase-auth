@@ -1,5 +1,7 @@
 import firebase from "gatsby-plugin-firebase"
 
+export const db = firebase.firestore()
+export const auth = firebase.auth()
 export interface Res {
   success: boolean
   message: string
@@ -13,14 +15,11 @@ interface UserSignUp {
     password: string
   }): Promise<{ error: string; field: string } | undefined>
 }
-const db = firebase.firestore()
 
 export const userSignUp: UserSignUp = async params => {
   const { firstName, lastName, email, password } = params
   try {
-    const response = await firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
+    const response = await auth.createUserWithEmailAndPassword(email, password)
     const { user } = response
     db.collection("users").doc(user?.uid).set({
       firstName,
