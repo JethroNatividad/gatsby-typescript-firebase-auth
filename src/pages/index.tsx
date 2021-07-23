@@ -1,26 +1,11 @@
-import React, { useEffect, useState } from "react"
+import { navigate } from "gatsby"
+import { useEffect } from "react"
 
-import Layout from "../components/layout"
-import { auth } from "../services/authService"
-
-const IndexPage = () => {
-  const [userEmail, setUserEmail] = useState("")
-
+const Index = () => {
   useEffect(() => {
-    auth.onAuthStateChanged(user => {
-      if (user && user.email) {
-        setUserEmail(user.email)
-      } else {
-        setUserEmail("")
-      }
-    })
+    navigate("/app/")
   }, [])
-
-  return (
-    <Layout>
-      <p>YO {userEmail}</p>
-    </Layout>
-  )
+  return null
 }
 
-export default IndexPage
+export default Index

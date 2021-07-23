@@ -13,7 +13,8 @@ import { LockOutlined } from "@material-ui/icons"
 import { Link as GatsbyLink, navigate } from "gatsby"
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { userSignUp } from "../services/authService"
+import { userLogin } from "../services/authService"
+import { RouteComponentProps } from "@reach/router"
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -40,13 +41,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const validationSchema = yup.object({
-  firstName: yup
-    .string()
-    .min(2, "First name should be of minimum 2 characters length")
-    .required("First name is required"),
-  lastName: yup
-    .string()
-    .min(2, "Last name should be of minimum 2 characters length"),
   email: yup
     .string()
     .email("Enter a valid email")
@@ -57,20 +51,27 @@ const validationSchema = yup.object({
     .required("Password is required"),
 })
 
-const register = () => {
-  const initialValues = { firstName: "", lastName: "", email: "", password: "" }
+const Login: React.FC<RouteComponentProps> = () => {
+  const initialValues = { email: "", password: "" }
   const classes = useStyles()
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values, actions) => {
       console.log({ values, actions })
-      const error = await userSignUp(values)
-      if (error) {
-        actions.setErrors({ [error.field]: error.error })
-      } else {
-        navigate("/")
+      try {
+        const user = await userLogin(values)
+        if (user) {
+          console.log(user)
+        }
+      } catch (e) {
+        console.log(e)
       }
+      // if (error) {
+      //   actions.setErrors({ [error.field]: error.error })
+      // } else {
+      //   navigate("/app")
+      // }
       actions.setSubmitting(false)
     },
   })
@@ -82,41 +83,10 @@ const register = () => {
           <LockOutlined />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Login
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                value={values.firstName}
-                onChange={handleChange}
-                error={touched.firstName && Boolean(errors.firstName)}
-                helperText={touched.firstName && errors.firstName}
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                value={values.lastName}
-                onChange={handleChange}
-                error={touched.lastName && Boolean(errors.lastName)}
-                helperText={touched.lastName && errors.lastName}
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 value={values.email}
@@ -158,13 +128,13 @@ const register = () => {
             disabled={formik.isSubmitting}
           >
             {formik.isSubmitting && <CircularProgress size={14} />}
-            Sign Up
+            Login
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
               <GatsbyLink className={classes.link} to="/">
                 <Typography className={classes.link} component="p">
-                  Already have an account? Sign in
+                  Don't have an account? Register
                 </Typography>
               </GatsbyLink>
             </Grid>
@@ -175,4 +145,4 @@ const register = () => {
   )
 }
 
-export default register
+export default Login
